@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Paper, Typography, Grid } from "@mui/material";
 
 const SecondSection = ({ data }) => {
@@ -8,35 +8,35 @@ const SecondSection = ({ data }) => {
   const [frecuenciasPorSector, setFrecuenciasPorSector] = useState(0);
   const [areaCoberturaTotal, setAreaCoberturaTotal] = useState(0);
 
-  const calNumeroSubportadoras = () => {
+  const calNumeroSubportadoras = useCallback(() => {
     return Math.floor(data.anchoDeBanda / data.anchoDeBandaSub - 1);
-  };
+  });
 
-  const calDistanciaReutilizacion = () => {
+  const calDistanciaReutilizacion = useCallback(() => {
     return Math.sqrt(3 * data.numeroRombico * data.radioCelda ** 2).toFixed(3);
-  };
+  });
 
-  const calRelacionProteccion = () => {
+  const calRelacionProteccion = useCallback(() => {
     return (
       10 *
       Math.log(
         (distanciaReutilizacion / data.radioCelda - 1) ** data.valorN / 6
       )
     ).toFixed(3);
-  };
+  });
 
-  const calFrecuenciasPorSector = () => {
+  const calFrecuenciasPorSector = useCallback(() => {
     return Math.floor(
       numeroSubportadoras / (data.numeroRombico * data.sectoresPorCelda)
     );
-  };
+  });
 
-  const calAreaCoberturaTotal = () => {
+  const calAreaCoberturaTotal = useCallback(() => {
     return (
       ((data.numeroRombico * (data.radioCelda ** 2 * 3 * Math.sqrt(3))) / 2) *
       data.valorQ
     ).toFixed(3);
-  };
+  });
 
   useEffect(() => {
     if (data) {
@@ -46,7 +46,14 @@ const SecondSection = ({ data }) => {
       setFrecuenciasPorSector(calFrecuenciasPorSector());
       setAreaCoberturaTotal(calAreaCoberturaTotal());
     }
-  }, [data]);
+  }, [
+    data,
+    calAreaCoberturaTotal,
+    calDistanciaReutilizacion,
+    calFrecuenciasPorSector,
+    calNumeroSubportadoras,
+    calRelacionProteccion,
+  ]);
 
   return (
     <Paper elevation={3} sx={{ width: "40%", padding: 2 }}>
