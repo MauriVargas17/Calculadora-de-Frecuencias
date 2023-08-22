@@ -8,13 +8,43 @@ const SecondSection = ({ data }) => {
   const [frecuenciasPorSector, setFrecuenciasPorSector] = useState(0);
   const [areaCoberturaTotal, setAreaCoberturaTotal] = useState(0);
 
+  const calNumeroSubportadoras = () => {
+    return Math.floor(data.anchoDeBanda / data.anchoDeBandaSub - 1);
+  };
+
+  const calDistanciaReutilizacion = () => {
+    return Math.sqrt(3 * data.numeroRombico * data.radioCelda ** 2).toFixed(3);
+  };
+
+  const calRelacionProteccion = () => {
+    return (
+      10 *
+      Math.log(
+        (distanciaReutilizacion / data.radioCelda - 1) ** data.valorN / 6
+      )
+    ).toFixed(3);
+  };
+
+  const calFrecuenciasPorSector = () => {
+    return Math.floor(
+      numeroSubportadoras / (data.numeroRombico * data.sectoresPorCelda)
+    );
+  };
+
+  const calAreaCoberturaTotal = () => {
+    return (
+      ((data.numeroRombico * (data.radioCelda ** 2 * 3 * Math.sqrt(3))) / 2) *
+      data.valorQ
+    ).toFixed(3);
+  };
+
   useEffect(() => {
     if (data) {
-      setNumeroSubportadoras(data.anchoDeBanda * 2);
-      setDistanciaReutilizacion(data.anchoDeBanda * 0.5);
-      setRelacionProteccion(data.anchoDeBanda + 5);
-      setFrecuenciasPorSector(data.anchoDeBanda * 2);
-      setAreaCoberturaTotal(data.anchoDeBanda * data.valorN);
+      setNumeroSubportadoras(calNumeroSubportadoras());
+      setDistanciaReutilizacion(calDistanciaReutilizacion());
+      setRelacionProteccion(calRelacionProteccion());
+      setFrecuenciasPorSector(calFrecuenciasPorSector());
+      setAreaCoberturaTotal(calAreaCoberturaTotal());
     }
   }, [data]);
 
@@ -28,11 +58,11 @@ const SecondSection = ({ data }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography>Distancia de reutilización:</Typography>
-          <Typography variant="h6">{distanciaReutilizacion}</Typography>
+          <Typography variant="h6">{distanciaReutilizacion} m</Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography>Relación de protección:</Typography>
-          <Typography variant="h6">{relacionProteccion}</Typography>
+          <Typography variant="h6">{relacionProteccion} dB</Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography>Numero de frecuencias por sector:</Typography>
@@ -40,7 +70,7 @@ const SecondSection = ({ data }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography>Área total de cobertura:</Typography>
-          <Typography variant="h6">{areaCoberturaTotal}</Typography>
+          <Typography variant="h6">{areaCoberturaTotal} m2</Typography>
         </Grid>
       </Grid>
     </Paper>

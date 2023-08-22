@@ -19,18 +19,22 @@ const FirstSection = ({ onGenerateResults }) => {
   const [valorN, setValorN] = useState(2.7);
   const [sectoresPorCelda, setSectoresPorCelda] = useState(1);
   const [valorQ, setValorQ] = useState(1);
+  const [frecBase, setFrecBase] = useState(0);
 
   const handleAnchoDeBanda = (event) => {
     setTecnologia(event.target.value);
     if (event.target.value === "1G") {
       setAnchoDeBanda("10 MHz");
       setAnchoDeBandaSub("30 kHz");
+      setFrecBase(800);
     } else if (event.target.value === "2G-Bolivia") {
       setAnchoDeBanda("15 MHz");
       setAnchoDeBandaSub("200 kHz");
+      setFrecBase(1850);
     } else if (event.target.value === "2G-Europa") {
       setAnchoDeBanda("25 MHz");
       setAnchoDeBandaSub("200 kHz");
+      setFrecBase(890);
     }
   };
 
@@ -44,6 +48,7 @@ const FirstSection = ({ onGenerateResults }) => {
     const value = event.target.value;
     if (Number.isInteger(Number(value))) {
       setNumeroRombico(value);
+      console.log("Seteando rombico a " + value);
     }
   };
 
@@ -62,26 +67,43 @@ const FirstSection = ({ onGenerateResults }) => {
     }
   };
 
+  const isRhombic = (number) => {
+    for (let i = -number; i <= number; i++) {
+      for (let j = -number; j <= number; j++) {
+        const expressionValue = i ** 2 + j ** 2 + i * j;
+        if (expressionValue === Number(number)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const handleGenerateResults = () => {
     const trimmedAnchoDeBanda = parseInt(anchoDeBanda.trim());
     const trimmedAnchoDeBandaSub = parseInt(anchoDeBandaSub.trim());
-    console.log(trimmedAnchoDeBanda);
     const isRCCorrect =
       !isNaN(radioCelda) && radioCelda >= 200 && radioCelda <= 2000;
     const isTecCorrect = tecnologia;
+    const isRomCorrect = isRhombic(numeroRombico);
 
     if (isRCCorrect && isTecCorrect) {
-      const data = {
-        anchoDeBanda: trimmedAnchoDeBanda,
-        anchoDeBandaSub: trimmedAnchoDeBandaSub,
-        radioCelda,
-        numeroRombico,
-        valorN,
-        sectoresPorCelda,
-        valorQ,
-      };
+      if (isRomCorrect) {
+        const data = {
+          anchoDeBanda: trimmedAnchoDeBanda,
+          anchoDeBandaSub: trimmedAnchoDeBandaSub / 1000,
+          radioCelda,
+          numeroRombico,
+          valorN,
+          sectoresPorCelda,
+          valorQ,
+          frecBase,
+        };
 
-      onGenerateResults(data);
+        onGenerateResults(data);
+      } else {
+        window.alert("Ingresa un numero rombico valido");
+      }
     } else {
       window.alert("Llena los datos correctamente");
     }
