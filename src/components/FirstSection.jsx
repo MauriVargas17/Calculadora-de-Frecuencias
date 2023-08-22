@@ -36,9 +36,8 @@ const FirstSection = ({ onGenerateResults }) => {
 
   const handleRadioCelda = (event) => {
     const value = parseInt(event.target.value);
-    if (!isNaN(value) && value >= 200 && value <= 2000) {
-      setRadioCelda(value);
-    }
+
+    setRadioCelda(value);
   };
 
   const handleNumeroRombico = (event) => {
@@ -67,17 +66,25 @@ const FirstSection = ({ onGenerateResults }) => {
     const trimmedAnchoDeBanda = parseInt(anchoDeBanda.trim());
     const trimmedAnchoDeBandaSub = parseInt(anchoDeBandaSub.trim());
     console.log(trimmedAnchoDeBanda);
-    const data = {
-      anchoDeBanda: trimmedAnchoDeBanda,
-      anchoDeBandaSub: trimmedAnchoDeBandaSub,
-      radioCelda,
-      numeroRombico,
-      valorN,
-      sectoresPorCelda,
-      valorQ,
-    };
+    const isRCCorrect =
+      !isNaN(radioCelda) && radioCelda >= 200 && radioCelda <= 2000;
+    const isTecCorrect = tecnologia;
 
-    onGenerateResults(data);
+    if (isRCCorrect && isTecCorrect) {
+      const data = {
+        anchoDeBanda: trimmedAnchoDeBanda,
+        anchoDeBandaSub: trimmedAnchoDeBandaSub,
+        radioCelda,
+        numeroRombico,
+        valorN,
+        sectoresPorCelda,
+        valorQ,
+      };
+
+      onGenerateResults(data);
+    } else {
+      window.alert("Llena los datos correctamente");
+    }
   };
 
   return (
@@ -106,7 +113,6 @@ const FirstSection = ({ onGenerateResults }) => {
             type="number"
             value={radioCelda}
             onChange={handleRadioCelda}
-            inputProps={{ min: 200, max: 2000 }}
             fullWidth
           />
         </Grid>
