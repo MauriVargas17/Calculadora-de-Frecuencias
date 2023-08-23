@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Paper,
   Typography,
   Select,
   MenuItem,
@@ -9,6 +8,28 @@ import {
   Button,
   Grid,
 } from "@mui/material";
+import Section from "./Section";
+import {
+  createTheme,
+  ThemeProvider,
+  alpha,
+  getContrastRatio,
+} from "@mui/material/styles";
+
+const violetBase = "#CAA3EF";
+const violetMain = alpha(violetBase, 0.7);
+
+const theme = createTheme({
+  palette: {
+    violet: {
+      main: violetMain,
+      light: alpha(violetBase, 0.5),
+      dark: alpha(violetBase, 0.9),
+      contrastText:
+        getContrastRatio(violetMain, "#fff") > 4.5 ? "#fff" : "#123",
+    },
+  },
+});
 
 const FirstSection = ({ onGenerateResults }) => {
   const [tecnologia, setTecnologia] = useState("");
@@ -84,11 +105,10 @@ const FirstSection = ({ onGenerateResults }) => {
     const trimmedAnchoDeBandaSub = parseInt(anchoDeBandaSub.trim());
     const isRCCorrect =
       !isNaN(radioCelda) && radioCelda >= 200 && radioCelda <= 2000;
-    const isTecCorrect = tecnologia;
     const isRomCorrect = isRhombic(numeroRombico);
 
-    if (isRCCorrect && isTecCorrect) {
-      if (isRomCorrect) {
+    if (isRCCorrect && tecnologia && valorQ) {
+      if (numeroRombico && isRomCorrect) {
         const data = {
           anchoDeBanda: trimmedAnchoDeBanda,
           anchoDeBandaSub: trimmedAnchoDeBandaSub / 1000,
@@ -110,8 +130,10 @@ const FirstSection = ({ onGenerateResults }) => {
   };
 
   return (
-    <Paper elevation={3} sx={{ width: "30%", padding: 2 }}>
-      <Typography variant="h6">Ajustes</Typography>
+    <Section width="20%">
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        Ajustes
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography>Tecnologia:</Typography>
@@ -149,15 +171,19 @@ const FirstSection = ({ onGenerateResults }) => {
         </Grid>
         <Grid item xs={12}>
           <Typography>Valor de N:</Typography>
-          <Slider
-            value={valorN}
-            onChange={handleValorN}
-            step={0.1}
-            min={2.7}
-            max={5}
-            valueLabelDisplay="auto"
-            fullWidth
-          />
+          <ThemeProvider theme={theme}>
+            <Slider
+              value={valorN}
+              onChange={handleValorN}
+              step={0.1}
+              min={2.7}
+              max={5}
+              marks
+              color="violet"
+              valueLabelDisplay="auto"
+              fullWidth
+            />
+          </ThemeProvider>
         </Grid>
         <Grid item xs={12}>
           <Typography>Numero de sectores por celda:</Typography>
@@ -180,16 +206,18 @@ const FirstSection = ({ onGenerateResults }) => {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleGenerateResults}
-          >
-            Generar resultados
-          </Button>
+          <ThemeProvider theme={theme}>
+            <Button
+              variant="contained"
+              color="violet"
+              onClick={handleGenerateResults}
+            >
+              Generar resultados
+            </Button>
+          </ThemeProvider>
         </Grid>
       </Grid>
-    </Paper>
+    </Section>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Paper, Typography, Grid } from "@mui/material";
+import { Typography, Grid } from "@mui/material";
+import Section from "./Section";
 
 const SecondSection = ({ data }) => {
   const [numeroSubportadoras, setNumeroSubportadoras] = useState(0);
@@ -56,8 +57,10 @@ const SecondSection = ({ data }) => {
   ]);
 
   return (
-    <Paper elevation={3} sx={{ width: "40%", padding: 2 }}>
-      <Typography variant="h6">Resultados</Typography>
+    <Section width="20%">
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        Resultados
+      </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography>Numero de subportadoras:</Typography>
@@ -80,7 +83,7 @@ const SecondSection = ({ data }) => {
           <Typography variant="h6">{areaCoberturaTotal} m2</Typography>
         </Grid>
       </Grid>
-    </Paper>
+    </Section>
   );
 };
 

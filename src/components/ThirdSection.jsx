@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Paper,
   Typography,
   Table,
   TableContainer,
@@ -9,11 +8,14 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
+import Section from "./Section";
 
-const ThirdSection = ({ tableData }) => {
+const ThirdSection = ({ tableData, height }) => {
   return (
-    <Paper elevation={3} sx={{ width: "50%", padding: 2 }}>
-      <Typography variant="h6">Tabla de Distribucion de Frecuencias</Typography>
+    <Section width="60%" height={height}>
+      <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+        Tabla de Distribucion de Frecuencias
+      </Typography>
       <TableContainer sx={{ overflowX: "auto" }}>
         <Table stickyHeader>
           <TableHead>
@@ -34,7 +36,7 @@ const ThirdSection = ({ tableData }) => {
           </TableBody>
         </Table>
       </TableContainer>
-    </Paper>
+    </Section>
   );
 };
 

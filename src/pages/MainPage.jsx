@@ -3,6 +3,7 @@ import "../styles/MainPage.css";
 import FirstSection from "../components/FirstSection";
 import SecondSection from "../components/SecondSection";
 import ThirdSection from "../components/ThirdSection";
+import TitleBanner from "../components/TitleBanner";
 
 const MainPage = () => {
   const [secondSectionData, setSecondSectionData] = useState(null);
@@ -13,23 +14,21 @@ const MainPage = () => {
     setSecondSectionData(data);
     setData(data);
   };
-  //Ejemplo de formato de tabla
-  const generateRandomNumber = () => Math.floor(Math.random() * 9) + 1;
+
   const numeroSubportadoras = Math.floor(
     data.anchoDeBanda / data.anchoDeBandaSub - 1
   );
+  const numeroFilas = Math.ceil((numeroSubportadoras / 21) * data.valorQ);
   let counter = 0;
   let numerosIngresados = 0;
   let frecuencia = data.frecBase;
   let repeticiones = data.valorQ;
 
   const headerGenerator = (index) => {
-    let header = "";
-    header = headerLetters[index % 3];
+    const header = headerLetters[index % 3];
     if (index % 3 === 0) {
       counter += 1;
     }
-
     return counter + header;
   };
 
@@ -43,7 +42,6 @@ const MainPage = () => {
       numerosIngresados += 1;
       return frecuencia.toFixed(3);
     } else if (repeticiones > 1) {
-      console.log(numerosIngresados);
       repeticiones -= 1;
       numerosIngresados = 0;
       frecuencia = data.frecBase;
@@ -57,10 +55,9 @@ const MainPage = () => {
       { length: 21 },
       (_, index) => `${headerGenerator(index)}`
     ),
-    //header: Array.from({ length: 21 }, (_, index) => `${counter === 3 ? index + 1 : counter - index + 1}`),
     rows: Array.from(
       {
-        length: Math.ceil((numeroSubportadoras / 21) * data.valorQ),
+        length: numeroFilas,
       },
       () => Array.from({ length: 21 }, () => frecGenerator())
     ),
@@ -68,10 +65,15 @@ const MainPage = () => {
 
   return (
     <div className="main-page">
-      <FirstSection onGenerateResults={handleGenerateResults} />
-      <SecondSection data={secondSectionData} />
-      {/*<ThirdSection numRows={4} numColumns={21} />*/}
-      <ThirdSection tableData={tableData} />
+      <TitleBanner title={"Calculadora de Andrea"}></TitleBanner>
+      <div className="sections">
+        <FirstSection onGenerateResults={handleGenerateResults} />
+        <SecondSection data={secondSectionData} />
+        <ThirdSection
+          tableData={tableData}
+          height={numeroFilas > 14 ? 800 + (numeroFilas - 14) * 60 : 800}
+        />
+      </div>
     </div>
   );
 };
