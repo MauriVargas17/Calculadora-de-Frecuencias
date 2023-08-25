@@ -18,7 +18,11 @@ const MainPage = () => {
   const numeroSubportadoras = Math.floor(
     data.anchoDeBanda / data.anchoDeBandaSub - 1
   );
-  const numeroFilas = Math.ceil((numeroSubportadoras / 21) * data.valorQ);
+  const numeroColumnas = data.sectoresPorCelda === 1 ? 7 : 21;
+  const numeroFilas = Math.ceil(
+    (numeroSubportadoras / numeroColumnas) * data.valorQ
+  );
+
   let counter = 0;
   let numerosIngresados = 0;
   let frecuencia = data.frecBase;
@@ -52,14 +56,15 @@ const MainPage = () => {
 
   const tableData = {
     header: Array.from(
-      { length: 21 },
-      (_, index) => `${headerGenerator(index)}`
+      { length: numeroColumnas },
+      (_, index) =>
+        `${numeroColumnas === 21 ? headerGenerator(index) : index + 1}`
     ),
     rows: Array.from(
       {
         length: numeroFilas,
       },
-      () => Array.from({ length: 21 }, () => frecGenerator())
+      () => Array.from({ length: numeroColumnas }, () => frecGenerator())
     ),
   };
 
