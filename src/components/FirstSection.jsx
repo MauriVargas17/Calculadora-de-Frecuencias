@@ -118,6 +118,7 @@ const FirstSection = ({ onGenerateResults }) => {
           sectoresPorCelda,
           valorQ,
           frecBase,
+          tecnologia,
         };
 
         onGenerateResults(data);

@@ -8,36 +8,60 @@ const SecondSection = ({ data }) => {
   const [relacionProteccion, setRelacionProteccion] = useState(0);
   const [frecuenciasPorSector, setFrecuenciasPorSector] = useState(0);
   const [areaCoberturaTotal, setAreaCoberturaTotal] = useState(0);
+  const [anchoDeBanda, setAnchoDeBanda] = useState(0);
+  const [anchoDeBandaSub, setAnchoDeBandaSub] = useState(0);
+  const [radioCelda, setRadioCelda] = useState(0);
+  const [numeroRombico, setNumeroRombico] = useState(0);
+  const [valorN, setValorN] = useState(0);
+  const [sectoresPorCelda, setSectoresPorCelda] = useState(0);
+  const [valorQ, setValorQ] = useState(1);
+  const [frecBase, setFrecBase] = useState(0);
+  const [tecnologia, setTecnologia] = useState("");
+
+  useEffect(() => {
+    if (data) {
+      setAnchoDeBanda(data.anchoDeBanda);
+      setAnchoDeBandaSub(data.anchoDeBandaSub);
+      setRadioCelda(data.radioCelda);
+      setNumeroRombico(data.numeroRombico);
+      setValorN(data.valorN);
+      setSectoresPorCelda(data.sectoresPorCelda);
+      setValorQ(data.valorQ);
+      setFrecBase(data.frecBase);
+      setTecnologia(data.tecnologia);
+    }
+  }, [data]);
 
   const calNumeroSubportadoras = useCallback(() => {
-    return Math.floor(data.anchoDeBanda / data.anchoDeBandaSub - 1);
-  });
+    return tecnologia === "1G"
+      ? Math.floor(anchoDeBanda / anchoDeBandaSub)
+      : Math.floor(anchoDeBanda / anchoDeBandaSub - 1);
+  }, [anchoDeBanda, anchoDeBandaSub, tecnologia]);
 
   const calDistanciaReutilizacion = useCallback(() => {
-    return Math.sqrt(3 * data.numeroRombico * data.radioCelda ** 2).toFixed(3);
-  });
+    return Number(valorQ) === 1
+      ? 0
+      : Math.sqrt(3 * numeroRombico * radioCelda ** 2).toFixed(3);
+  }, [valorQ, numeroRombico, radioCelda]);
 
   const calRelacionProteccion = useCallback(() => {
-    return (
-      10 *
-      Math.log(
-        (distanciaReutilizacion / data.radioCelda - 1) ** data.valorN / 6
-      )
-    ).toFixed(3);
-  });
+    return distanciaReutilizacion
+      ? (
+          10 * Math.log((distanciaReutilizacion / radioCelda - 1) ** valorN / 6)
+        ).toFixed(3)
+      : 0;
+  }, [distanciaReutilizacion, radioCelda, valorN]);
 
   const calFrecuenciasPorSector = useCallback(() => {
-    return Math.floor(
-      numeroSubportadoras / (data.numeroRombico * data.sectoresPorCelda)
-    );
-  });
+    return Math.floor(numeroSubportadoras / (numeroRombico * sectoresPorCelda));
+  }, [numeroRombico, numeroSubportadoras, sectoresPorCelda]);
 
   const calAreaCoberturaTotal = useCallback(() => {
     return (
-      ((data.numeroRombico * (data.radioCelda ** 2 * 3 * Math.sqrt(3))) / 2) *
-      data.valorQ
+      ((numeroRombico * (radioCelda ** 2 * 3 * Math.sqrt(3))) / 2) *
+      valorQ
     ).toFixed(3);
-  });
+  }, [numeroRombico, radioCelda, valorQ]);
 
   useEffect(() => {
     if (data) {
@@ -47,6 +71,7 @@ const SecondSection = ({ data }) => {
       setFrecuenciasPorSector(calFrecuenciasPorSector());
       setAreaCoberturaTotal(calAreaCoberturaTotal());
     }
+    //console.log(data.valorQ);
   }, [
     data,
     calAreaCoberturaTotal,
