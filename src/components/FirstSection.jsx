@@ -152,7 +152,7 @@ const FirstSection = ({ onGenerateResults }) => {
           <Typography variant="h6">{anchoDeBandaSub}</Typography>
         </Grid>
         <Grid item xs={12}>
-          <Typography>Radio de la celda:</Typography>
+          <Typography>Radio de la celda (m):</Typography>
           <TextField
             type="number"
             value={radioCelda}
